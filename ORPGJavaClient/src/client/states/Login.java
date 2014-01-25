@@ -2,7 +2,6 @@ package client.states;
 
 import client.GameClient;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -11,26 +10,27 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 
-public class Menu implements Screen {
+public class Login implements Screen {
 	private TextureAtlas atlas;
 	private Skin skin;
 	private Stage stage;
-	private Table table, newsTable;
-	private TextButton login, register, exit;
-	private Label title, news;
-	private Sprite menubg, menunews;
+	private Table table;
+	private TextButton login;
+	private TextField user, pass, email;
+	private Label title, username, password, txtEmail;
+	private Sprite menubg;
 	private SpriteBatch batch;
-
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -38,7 +38,6 @@ public class Menu implements Screen {
 		
 		batch.begin();
 			menubg.draw(batch);
-			menunews.draw(batch);
 			
 			GameClient.font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 			GameClient.font.draw(batch, GameClient.name + " " + GameClient.version, 10, 600 - 10);
@@ -49,7 +48,7 @@ public class Menu implements Screen {
 		batch.end();
 		
 		stage.draw();
-		//Table.drawDebug(stage);
+		Table.drawDebug(stage);
 		stage.act();
 	}
 
@@ -68,19 +67,12 @@ public class Menu implements Screen {
 		skin = new Skin(atlas);
 		
         table = new Table();
-        table.setBounds(100, 75, 600, 50);
+        table.setBounds(100, 140, 600, 300);
         
-        newsTable = new Table();
-        newsTable.setBounds(110, 150, 580, 280);
-        
-		Texture newsTex = new Texture("assets/data/img/ui/menu_news.png");
-		menunews = new Sprite(newsTex);
-		menunews.setPosition(100, 140);
-		
 		Texture menuTex = new Texture("assets/data/img/ui/menu_bg.png");
 		menubg = new Sprite(menuTex);
 		menubg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-	
+		
 		TextButtonStyle tbs = new TextButtonStyle();
 		tbs.up = skin.getDrawable("button.normal9");
 		tbs.down = skin.getDrawable("button.pressed9");
@@ -89,45 +81,34 @@ public class Menu implements Screen {
 		tbs.font = GameClient.menuBtnFont;
 		
 		LabelStyle titleStyle = new LabelStyle(GameClient.font50, Color.WHITE);
-		LabelStyle newsStyle = new LabelStyle(GameClient.newsFont, Color.WHITE);
+		LabelStyle loginStyle = new LabelStyle(GameClient.loginFnt, Color.WHITE);
 		
-		title = new Label(GameClient.name, titleStyle);
-		news = new Label(GameClient.news, newsStyle);
-		news.setWrap(true);
-		news.setAlignment(0, 2);
+		TextFieldStyle tfs = new TextFieldStyle();
+		tfs.font = GameClient.loginFnt;
+		tfs.fontColor = Color.WHITE;
 		
 		login = new TextButton("Login", tbs);
-		login.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				((Game) Gdx.app.getApplicationListener()).setScreen(new Play());
-			}
-		});
 		
-		register = new TextButton("Register", tbs);
-		register.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				((Game) Gdx.app.getApplicationListener()).setScreen(new Register());
-			}
-		});
+		title = new Label(GameClient.name, titleStyle);
+		username = new Label(GameClient.username, loginStyle);
+		password = new Label(GameClient.password, loginStyle);
+		txtEmail = new Label(GameClient.email, loginStyle);
 		
-		exit = new TextButton("Exit", tbs);
-		exit.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				Gdx.app.exit();
-			}
-		});
+		user = new TextField("", tfs);
+		pass = new TextField("", tfs);
+		email = new TextField("", tfs);
 		
-		table.add(login).width(180).spaceRight(30);
-		table.add(register).width(180).spaceRight(30);
-		table.add(exit).width(180);
+		table.add(username).width(125);
+		table.add(user).width(250);
+		table.row();
+		table.add(password).width(125);
+		table.add(pass).width(250);
+		table.row();
+		table.add(txtEmail).width(125);
+		table.add(email).width(250);
+		table.row();
+		table.add(login);
 		table.debug();
-		
-		newsTable.add(news).width(580);
-		newsTable.debug();
-		stage.addActor(newsTable);
 		stage.addActor(table);
 		
 		batch = new SpriteBatch();
@@ -150,7 +131,7 @@ public class Menu implements Screen {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
+		
 	}
 
 }
