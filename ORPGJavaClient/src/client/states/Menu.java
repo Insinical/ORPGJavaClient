@@ -26,7 +26,7 @@ public class Menu implements Screen {
 	private Skin skin;
 	private Stage stage;
 	private Table table, newsTable;
-	private TextButton login, register, exit;
+	private TextButton play, register, exit;
 	private Label title, news;
 	private Sprite menubg, menunews;
 	private SpriteBatch batch;
@@ -96,8 +96,8 @@ public class Menu implements Screen {
 		news.setWrap(true);
 		news.setAlignment(0, 2);
 		
-		login = new TextButton("Login", tbs);
-		login.addListener(new ClickListener() {
+		play = new TextButton("Play", tbs);
+		play.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				((Game) Gdx.app.getApplicationListener()).setScreen(new Play());
@@ -108,7 +108,7 @@ public class Menu implements Screen {
 		register.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				((Game) Gdx.app.getApplicationListener()).setScreen(new Register());
+				((Game) Gdx.app.getApplicationListener()).setScreen(new Play());
 			}
 		});
 		
@@ -120,7 +120,7 @@ public class Menu implements Screen {
 			}
 		});
 		
-		table.add(login).width(180).spaceRight(30);
+		table.add(play).width(180).spaceRight(30);
 		table.add(register).width(180).spaceRight(30);
 		table.add(exit).width(180);
 		table.debug();
